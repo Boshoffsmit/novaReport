@@ -1,0 +1,76 @@
+---
+title: "Nova Reporting Function"
+author: "Christiaan Pauw, Nova Instituut"
+output: pdf_document
+---
+
+```{r global_options, warning=FALSE, message=FALSE, echo=FALSE}
+library(knitr)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, echo = FALSE)
+
+USER <- c("CJP", "AH", "BS")[3]
+
+if (USER == "CJP") {
+  wd <- "/Users/christiaanpauw/Documents/Rpakette/novaReport/"
+  setwd("/Users/christiaanpauw/Documents/Rpakette/novaReport/")
+  rdir <-  file.path(paste(wd, "R/", sep=""))
+  datadir <- normalizePath(paste("data/", sep = ""))
+
+}
+
+
+if (USER == "AH") {
+  projdir <- "C:/Users/Alex H/Documents/R/novaReport/"
+  rdir <-  normalizePath(paste(projdir, "R/", sep=""))
+  datadir <- normalizePath(paste(projdir, "data/", sep = ""))
+}
+
+
+if (USER == "BS") {
+  projdir <- "C:/Users/Willem/Desktop/Nova Packages/NovaReport/novaReport/"
+  rdir <-  normalizePath(paste(projdir, "R/", sep=""))
+  datadir <- normalizePath(paste(projdir, "data/", sep = ""))
+  Sys.setenv("R_ZIPCMD" = "C:/Rtools/bin/zip.exe")
+}
+
+source(paste(rdir, '/discrete_table_write.R', sep = "")) 
+source(paste(rdir, '/discrete_table.R', sep = "")) 
+source(paste(rdir, '/any_discrete.R', sep = "")) 
+source(paste(rdir, '/numeric_table.R', sep = "")) 
+source(paste(rdir, '/any_numeric.R', sep = "")) 
+source(paste(rdir, '/section_report2.R', sep = "")) 
+source(paste(rdir, '/qs.text.R', sep = "")) 
+source(paste(rdir, '/multi_table.R', sep = "")) 
+source(paste(rdir, '/subsection_report.R', sep = ""))
+source(paste(rdir, '/tableNominal2.R', sep = ""))
+source(paste(rdir, "/chi.2.eksp.R", sep = ""))
+source(paste(rdir, "/withWarnings.R", sep = ""))
+source(paste(rdir, "/afh.tab.R", sep = ""))
+source(paste(rdir, "/chi.confounder.net.R", sep = ""))
+source(paste(rdir, "/tableContinuous2.R", sep = ""))
+
+load(paste(datadir, "/Detailed_Energy_SurveyDec8.Rda", sep = ""))
+```
+
+#Output of the afh.tab function
+
+```{r, results='asis'}
+p <- chi.2.eksp(des, outdir = getwd())
+afh.tab(x = p, tabdir = getwd(), markDown = TRUE, lateX = FALSE, latSave = FALSE)
+```
+
+#Output if the single report function
+
+```{r, results='asis'}
+
+single_report(x = des, var = "fieldworker", qs = qs, verbose = FALSE, levSizeN = "0.15")
+
+```
+
+#Output of the Section Report 2 function
+
+```{r , results='asis'}
+
+section_report2(x = des, qss = qs, sec = "Coal", multiname = "Multiple", debug = TRUE, groupvar = "energy_coal_device", forcegvar = FALSE, varSizeN = "0.15")
+```
+
